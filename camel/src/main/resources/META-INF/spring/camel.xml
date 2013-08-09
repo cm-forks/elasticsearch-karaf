@@ -1,0 +1,17 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+          http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+          http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd">
+
+  <camelContext id="camel-eleasticsearch" trace="true" xmlns="http://camel.apache.org/schema/spring">
+    <route>
+      <from uri="timer://test?period=10s"/>
+      <setBody>
+        <constant>test</constant>
+      </setBody>
+      <to uri="elasticsearch://KARAF?network.host=127.0.0.1&amp;operation=INDEX&amp;indexName=log&amp;indexType=camel"/>
+    </route>
+  </camelContext>
+
+</beans>

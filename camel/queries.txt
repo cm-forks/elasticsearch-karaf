@@ -1,0 +1,77 @@
+// Range Search
+
+curl -XGET 'http://localhost:9200/ip/_search?pretty=true' -d '
+{
+  "query" : {
+    "bool" : {
+      "must" : [ {
+        "range" : {
+          "from" : {
+            "from" : null,
+            "to" : "192.168.0.7",
+            "include_lower" : true,
+            "include_upper" : false
+          }
+        }
+      }, {
+        "range" : {
+          "to" : {
+            "from" : "192.168.0.7",
+            "to" : null,
+            "include_lower" : false,
+            "include_upper" : true
+          }
+        }
+      } ]
+    }
+  }
+}'
+
+// Date Search
+curl -XGET 'http://localhost:9200/timestamp-id/_search?pretty=true' -d '
+{
+  "query" : {
+    "range" : {
+      "_timestamp" : {
+        "from" : "2012-01-01",
+        "to" : "2014-01-01",
+        "include_lower" : true,
+        "include_upper" : true
+      }
+    }
+  }
+}'
+
+// All entries
+curl -XGET 'http://localhost:9200/timestamp-id/_search?pretty=true' -d '
+{
+    "fields" : ["field1","_timestamp"],
+    "query" : {
+      "term" : { "field1" : "value1" }
+    }
+}'
+
+// All entries
+curl -XGET 'http://localhost:9200/timestamp-id/_search?pretty=true' -d '
+{
+    "fields" : ["field1","_timestamp"],
+    "query" : {
+       "matchAll" : {}
+    }
+}'
+
+More info :
+
+By default ElasticSearch returns only 10 documents from all the ones that were found.
+You can modify how many documents you want to be returned, look at size and from parameters - http://www.elasticsearch.org/guide/reference/api/search/from-size/.
+
+However, remember that fetching too many results with a standard query is not advisable and will result in poor performance.
+If you wish to fetch all query results you should look at the scroll functionality - http://www.elasticsearch.org/guide/reference/api/search/scroll/
+
+
+curl -XPUT 'http://localhost:9200/twitter/tweet/1' -d '
+{
+    "user": "kimchy",
+    "postDate": "2009-11-15T13:12:00",
+    "message": "Trying out Elastic Search, so far so good?"
+}'
