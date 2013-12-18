@@ -1,13 +1,15 @@
 # Install features/bundle
 
-mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.elasticsearch/0.90.5_1
-mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.regexp/1.3_3
-wrap:mvn:org.apache.lucene/lucene-snowball/3.0.3
-mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.lucene/4.6.0_1
-mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.lucene-analyzers-common/4.6.0_1
-mvn:org.apache.karaf.elasticsearch/embedded-server/1.0-SNAPSHOT
+	mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.elasticsearch/0.90.5_1
+	mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.regexp/1.3_3
+	wrap:mvn:org.apache.lucene/lucene-snowball/3.0.3
+	mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.lucene/4.6.0_1
+	mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.lucene-analyzers-common/4.6.0_1
+	mvn:org.apache.karaf.elasticsearch/embedded-server/1.0-SNAPSHOT
 
-Error
+# Error generated when an embedded server is created by Blueprint
+
+````
 
 2013-12-18 21:43:00,946 | ERROR | FelixStartLevel  | BlueprintContainerImpl           | container.BlueprintContainerImpl  393 | 7 - org.apache.aries.blueprint.core - 1.1.0 | Unable to start blueprint container for bundle org.apache.karaf.elasticsearch.embedded-server
 org.osgi.service.blueprint.container.ComponentDefinitionException: Error when instantiating bean embedded of class class org.apache.karaf.elasticsearch.EmbeddedServer
@@ -65,3 +67,5 @@ Caused by: java.lang.ClassNotFoundException: org.elasticsearch.discovery.zen.Zen
 	at java.lang.ClassLoader.loadClass(ClassLoader.java:358)[:1.7.0_45]
 	at org.elasticsearch.common.settings.ImmutableSettings.loadClass(ImmutableSettings.java:347)[117:org.apache.servicemix.bundles.elasticsearch:0.90.5.1]
 	... 40 more
+	
+````
