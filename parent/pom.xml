@@ -15,7 +15,7 @@
   <name>Apache Karaf :: ElasticSearch :: Parent</name>
 
   <properties>
-    <elasticsearch.version>1.0.0.Beta1-SNAPSHOT</elasticsearch.version>
+    <elasticsearch.version>0.90.5</elasticsearch.version>
     <camel.version>2.11.0</camel.version>
     <commons-io-file.version>2.4</commons-io-file.version>
     <junit.version>4.11</junit.version>

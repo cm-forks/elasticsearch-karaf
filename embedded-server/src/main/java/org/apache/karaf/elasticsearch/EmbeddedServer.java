@@ -1,19 +1,21 @@
 package org.apache.karaf.elasticsearch;
 
 import java.net.URISyntaxException;
+import java.util.Enumeration;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
 import org.elasticsearch.Version;
 import org.elasticsearch.client.Client;
+import org.elasticsearch.common.settings.ImmutableSettings;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.node.Node;
+import org.elasticsearch.node.internal.InternalNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import static org.elasticsearch.common.collect.Maps.*;
 import static org.elasticsearch.common.settings.ImmutableSettings.*;
-import static org.elasticsearch.node.NodeBuilder.*;
 
 public class EmbeddedServer {
 
@@ -59,17 +61,11 @@ public class EmbeddedServer {
         }
     }
 
-    void init(String id) throws URISyntaxException {
-        /*
-        // Define Settings
-        defaultSettings = ImmutableSettings
-                .settingsBuilder()
-                //.put("cluster.name", "test-cluster-" + NetworkUtils.getLocalAddress().getHostName())
-                .put("cluster.name","KARAF")
-                .put("http.enabled", "true")
-                .build();
-                */
+    public void init() throws URISyntaxException {
+        init("KARAF");
+    }
 
+    public void init(String id) throws URISyntaxException {
         // Build ElasticSearch with one Node
         buildNode(id, settingsBuilder().build());
     }
@@ -136,11 +132,15 @@ public class EmbeddedServer {
             finalSettings = settingsBuilder().put(finalSettings).put("cluster.routing.schedule", "50ms").build();
         }
 
-        Node node = nodeBuilder()
+        /*Node node = nodeBuilder()
                 .settings(finalSettings)
                 .local(false)
-                .build();
+                .build();*/
 
+        ImmutableSettings.Builder builder = ImmutableSettings.settingsBuilder();
+        builder.put(finalSettings);
+        builder.classLoader(EmbeddedServer.class.getClassLoader());
+        Node node = new InternalNode(builder.build(),false);
         nodes.put(id, node);
         clients.put(id, node.client());
     }

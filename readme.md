@@ -1,11 +1,18 @@
 # Install features/bundle
 
-	mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.elasticsearch/0.90.5_1
-	mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.regexp/1.3_3
-	wrap:mvn:org.apache.lucene/lucene-snowball/3.0.3
-	mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.lucene/4.6.0_1
-	mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.lucene-analyzers-common/4.6.0_1
-	mvn:org.apache.karaf.elasticsearch/embedded-server/1.0-SNAPSHOT
+    mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.elasticsearch/0.90.5_1
+    mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.regexp/1.3_3
+    wrap:mvn:org.apache.lucene/lucene-snowball/3.0.3
+    mvn:org.apache.karaf.elasticsearch/embedded-server/1.0-SNAPSHOT
+    mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.lucene/4.6.0_1
+    mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.lucene-analyzers-common/4.6.0_1
+    wrap:mvn:org.apache.lucene/lucene-codecs/4.6.0
+    mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.lucene-queries/4.6.0_1
+    mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.lucene-sandbox/4.6.0_1
+    wrap:mvn:org.apache.lucene/lucene-highlighter/4.6.0
+    wrap:mvn:org.apache.lucene/lucene-join/4.6.0
+    wrap:mvn:org.apache.lucene/lucene-spellchecker/3.6.2
+    wrap:mvn:org.apache.lucene/lucene-spatial/4.6.0
 
 # Error generated when an embedded server is created by Blueprint
 
