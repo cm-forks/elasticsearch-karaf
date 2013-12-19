@@ -156,6 +156,7 @@
                             *;resolution:=optional
                         </Import-Package>
                         <Private-Package>
+                            META-INF.services,
                             org.apache.lucene*;-split-package:=merge-first,
                             org.tartarus.snowball*,
                             org.apache.karaf.elasticsearch
@@ -163,6 +164,11 @@
                         <Export-Package>
                             org.elasticsearch*;version=0.90.5
                         </Export-Package>
+                        <!-- Added to support SPI -->
+                        <Require-Capability>
+                            osgi.extender; filter:="(osgi.extender=osgi.serviceloader.registrar)"
+                        </Require-Capability>
+                        <SPI-Provider>*</SPI-Provider>
                         <!--
                         -noimport:=true,
                         -split-package:=merge-first
