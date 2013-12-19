@@ -1,64 +1,48 @@
 package org.apache.karaf.elasticsearch;
 
-import java.io.File;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.util.Enumeration;
-import java.util.Map;
-import java.util.concurrent.CountDownLatch;
-
 import org.elasticsearch.Version;
-import org.elasticsearch.client.Client;
 import org.elasticsearch.common.settings.ImmutableSettings;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.node.Node;
 import org.elasticsearch.node.internal.InternalNode;
-import org.osgi.framework.BundleContext;
+import org.osgi.framework.Bundle;
+import org.osgi.framework.FrameworkUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static org.elasticsearch.common.collect.Maps.*;
-import static org.elasticsearch.common.settings.ImmutableSettings.*;
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.concurrent.CountDownLatch;
+
+import static org.elasticsearch.common.settings.ImmutableSettings.settingsBuilder;
 
 public class EmbeddedServer {
 
     private static final Logger log = LoggerFactory.getLogger(EmbeddedServer.class);
-
     private final static String DEFAULT_DATA_DIRECTORY = "data/elasticsearch";
     private final static String NODE_NAME = "KARAF";
     private static volatile CountDownLatch keepAliveLatch;
     private static Node node;
-
-    private String id;
-    private BundleContext bundleContext;
-
-    public static void main(String[] args) {
-        EmbeddedServer em = new EmbeddedServer("LOCAL");
-    }
-
-    public EmbeddedServer(String id) {
-        log.info(">> Start ES <<");
-        try {
-            init(id);
-            start();
-            waitThread();
-            log.info(">> ES Server started <<");
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
-
-    }
+    private Bundle bundle;
 
     public EmbeddedServer() {
-        this("LOCAL");
+        log.info(">> Start ES <<");
+        init();
+        start();
+        waitThread();
+        log.info(">> ES Server started <<");
     }
 
-    public void init(String id) throws URISyntaxException {
-        buildNode(id);
+    public static void main(String[] args) {
+        EmbeddedServer em = new EmbeddedServer();
     }
 
-    public void shutdown() {
-        node.close();
+    public void init() {
+        // Try to retrieve BundleContext
+        bundle = FrameworkUtil.getBundle(EmbeddedServer.class);
+        buildNode();
     }
 
     void start() {
@@ -67,6 +51,12 @@ public class EmbeddedServer {
         } catch (RuntimeException t) {
             shutdown();
             throw t;
+        }
+    }
+
+    public void shutdown() {
+        if (node != null) {
+            node.close();
         }
     }
 
@@ -95,17 +85,15 @@ public class EmbeddedServer {
         keepAliveThread.start();
     }
 
-    private void buildNode(String id) throws URISyntaxException {
-
-        //File pluginDir = new File(EmbeddedServer.class.getResource("/plugin").toURI());
-        //String settingsSource = getClass().getName().replace('.', '/') + ".yml";
+    //String settingsSource = getClass().getName().replace('.', '/') + ".yml";
+    private void buildNode() {
 
         Settings settings = settingsBuilder()
                 .put("cluster.name", "KARAF")
                 .put("http.enabled", "true")
                 .put("node.data", true)
                 .put("path.data", DEFAULT_DATA_DIRECTORY)
-                .put("name", id)
+                .put("name", NODE_NAME)
                 .put("discovery.type", "zen")
                 .put("discovery.zen.multicast.enabled", false)
                 .put("discovery.zen.ping.unicast.enabled", true)
@@ -116,23 +104,28 @@ public class EmbeddedServer {
                 .build();
 
         // Add plugins
-        if (bundleContext == null) {
-            URL pluginDir = EmbeddedServer.class.getResource("/plugin/");
-            String plugins = new File(pluginDir.toURI()).getAbsolutePath();
-            settings = settingsBuilder().put("path.plugins", plugins).build();
-        } else {
-            System.out.print(">> Karaf, here we are !!!!");
+        URL url = null;
+        try {
+            if (bundle != null) {
+                url = new URL("file:///Users/chmoulli/MyProjects/elasticsearch-karaf/embedded-server/src/main/resources/plugin");
+            } else {
+                url = EmbeddedServer.class.getResource("/plugin/");
+            }
+
+            if (url != null) {
+                File plugins = new File(url.toURI());
+                settings = settingsBuilder().put(settings).put("path.plugins", plugins.getAbsolutePath()).build();
+            }
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
         }
 
+        // Create ES Node
         ImmutableSettings.Builder builder = ImmutableSettings.settingsBuilder();
         builder.put(settings);
         builder.classLoader(EmbeddedServer.class.getClassLoader());
         node = new InternalNode(builder.build(), false);
     }
-
-    public void setBundleContext(BundleContext bundleContext) {
-        this.bundleContext = bundleContext;
-    }
-
-
 }

@@ -1,7 +1,5 @@
-<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0" default-activation="lazy">
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0" default-activation="eager">
     <bean id="embeddedServer" class="org.apache.karaf.elasticsearch.EmbeddedServer"
           init-method="init"
-          destroy-method="shutdown">
-        <property name="bundleContext" ref="blueprintBundleContext"/>
-    </bean>
+          destroy-method="shutdown"/>
 </blueprint>
