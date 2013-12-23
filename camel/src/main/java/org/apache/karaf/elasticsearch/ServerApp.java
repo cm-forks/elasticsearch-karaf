@@ -16,7 +16,7 @@ public class ServerApp {
         }
 
         // Start Server Node
-        EmbeddedServer embeddedServer = new EmbeddedServer(id);
+        EmbeddedServer embeddedServer = new EmbeddedServer();
 
     }
 
