@@ -128,10 +128,72 @@ Here is a nice article providing basic JSON queries to create an index and fetch
 ## Using LogStash
 
 - Download and install logstash
+- STDIN to Redis
+
+    Terminal 1
+    cd /Users/chmoulli/MyApplications/redis-2.8.3/bin
+    ./redis-server
+
+    Terminal 2
+    cd /Users/chmoulli/MyApplications/logstash
+
+    java -jar logstash-1.3.2-flatjar.jar agent -f indexer.conf
+
+    ```
+    input {
+      stdin { type => "stdin-type" }
+    }
+
+    output {
+      stdout {
+        debug => true
+        debug_format => "json"
+      }
+      redis {
+        host => "localhost"
+        data_type => "list"
+        key => "logstash"
+      }
+    }
+    ```
+
+- REDIS to STDOUT / ES
+
+    Terminal 3
+
+
+    ```
+    input {
+      redis {
+        host           => '127.0.0.1'
+        data_type      => 'list'
+        key            => 'logstash'
+        type           => 'logstash'
+        message_format => "json_event"
+      }
+    }
+
+    output {
+      stdout { codec => json }
+      elasticsearch {
+        embedded   => "false"
+        host       => "127.0.0.1"
+        port       => 9300
+        node_name  => "KARAF"
+        cluster    => "KARAF"
+        bind_host  => "localhost"
+      }
+    }
+    ```
+
+    java -jar logstash-1.3.2-flatjar.jar agent -f logstash-redis.conf
+
+OR
+
 - Create a logstash conf file (`logstash-karaf.conf`) to collect log files of Karaf
 Remarks :
  * ${karaf.home} must be changed to point to your Apache Karaf Home installation directory
- * Elasticsearch is not emebedded as we will use the instance running in Karaf
+ * Elasticsearch is not embedded as we will use the instance running in Karaf
 
 ```
     input {
@@ -158,13 +220,11 @@ Remarks :
     }
 ```
 
-- Start `logstash`
-
-    java -jar logstash-1.3.2-flatjar.jar agent -v -f logstash-karaf.conf
+    java -jar logstash-1.3.2-flatjar.jar agent -f logstash-redis-karaf.conf
 
 ## TODO
 
-### Create log4j-son pattern
+### Create log4j-json pattern
 
 Follow instructions here
 
