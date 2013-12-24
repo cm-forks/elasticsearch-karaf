@@ -1,10 +1,22 @@
-# Install features/bundle
+# Turn on your OSGI Container into a Big data Node
 
-    install -s mvn:org.apache.karaf.elasticsearch/embedded-server/1.0-SNAPSHOT
+ElasticSearch project ...
+
+# Pre-requisite
+
+Apache Karaf container must be installed on your machine. Download it from this location : http://karaf.apache.org/index/community/download.html#Karaf2.3.3
+Extract the content, move to the directory bin in a Terminal and start Karaf
+
+    ./karaf
+
+# Install bundle
+
+Next, we will install the bundles required to install and run an ElasticSearch node on Apache Karaf
+
     install -s mvn:org.apache.aries.spifly/org.apache.aries.spifly.dynamic.bundle/1.0.0
     install -s mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.regexp/1.3_3
-    install -s wrap:mvn:org.apache.lucene/lucene-analyzers-common/4.4.0
     install -s mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.elasticsearch/0.90.5_2-SNAPSHOT
+    install -s mvn:org.apache.karaf.elasticsearch/embedded-server/1.0-SNAPSHOT
 
 # Add Data
 

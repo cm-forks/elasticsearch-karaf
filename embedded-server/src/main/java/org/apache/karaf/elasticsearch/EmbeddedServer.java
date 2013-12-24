@@ -107,9 +107,12 @@ public class EmbeddedServer {
         URL url = null;
         try {
             if (bundle != null) {
-                url = new URL("file:///Users/chmoulli/MyProjects/elasticsearch-karaf/embedded-server/src/main/resources/plugin");
+                String KARAF_HOME = System.getProperty("karaf.home");
+                String pluginsURL = "file://" + KARAF_HOME + "/plugins";
+                url = new URL(pluginsURL);
+                log.info(">> Location of ES Plugins : " + url);
             } else {
-                url = EmbeddedServer.class.getResource("/plugin/");
+                url = EmbeddedServer.class.getResource("/plugins/");
             }
 
             if (url != null) {
