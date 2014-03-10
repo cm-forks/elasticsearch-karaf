@@ -6,7 +6,7 @@
   <parent>
     <groupId>org.apache.karaf.elasticsearch</groupId>
     <artifactId>project</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>0.1</version>
   </parent>
 
   <groupId>org.apache.karaf.elasticsearch</groupId>
@@ -15,7 +15,8 @@
   <name>Apache Karaf :: ElasticSearch :: Parent</name>
 
   <properties>
-    <elasticsearch.version>0.90.5</elasticsearch.version>
+    <!--<elasticsearch.version>0.90.5</elasticsearch.version>-->
+    <elasticsearch.version>1.0.1</elasticsearch.version>
     <camel.version>2.11.0</camel.version>
     <commons-io-file.version>2.4</commons-io-file.version>
     <junit.version>4.11</junit.version>

@@ -15,8 +15,11 @@ Next, we will install the bundles required to install and run an ElasticSearch n
 
     install -s mvn:org.apache.aries.spifly/org.apache.aries.spifly.dynamic.bundle/1.0.0
     install -s mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.regexp/1.3_3
-    install -s mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.elasticsearch/0.90.5_2-SNAPSHOT
-    install -s mvn:org.apache.karaf.elasticsearch/embedded-server/1.0-SNAPSHOT
+    install -s mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.lucene/4.6.1_1
+    install -s wrap:mvn:org.apache.lucene/lucene-codecs/4.6.0
+    install -s mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.lucene-analyzers-common/4.6.1_1
+    install -s mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.elasticsearch/1.0.1_2-SNAPSHOT
+    install -s mvn:org.apache.karaf.elasticsearch/embedded-server/0.1
 
 # Add Data
 
