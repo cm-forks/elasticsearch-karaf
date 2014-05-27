@@ -1,29 +1,48 @@
-# Turn on your OSGI Container into a Big data Node
+# Turn on your Apache Karaf Container into a Big data Node
 
 ElasticSearch project ...
 
 # Pre-requisite
 
-Apache Karaf container must be installed on your machine. Download it from this location : http://karaf.apache.org/index/community/download.html#Karaf2.3.3
-Extract the content, move to the directory bin in a Terminal and start Karaf
+- Apache Karaf container must be installed on your machine.
+- Download it from this location : http://karaf.apache.org/index/community/download.html#Karaf2.3.5
+- Extract the content, move to the directory bin in a Unix/Dos Terminal and start Karaf
 
     ./karaf
 
 # Install bundle
 
-Next, we will install the bundles required to install and run an ElasticSearch node on Apache Karaf
+- Next, we will deploy the bundles required to install and run an ElasticSearch node on Apache Karaf
 
     install -s mvn:org.apache.aries.spifly/org.apache.aries.spifly.dynamic.bundle/1.0.0
     install -s mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.regexp/1.3_3
-    install -s mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.elasticsearch/0.90.5_2-SNAPSHOT
+    install -s mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.elasticsearch/0.90.5_2
     install -s mvn:org.apache.karaf.elasticsearch/embedded-server/1.0-SNAPSHOT
+
+- When the bundles have been deployed, a ElasticSearch server will be started
+- You can verify/validate this by looking to your karaf log (log:display)
+
+    2014-05-27 19:10:37,943 | INFO  | l Console Thread | EmbeddedServer                   | raf.elasticsearch.EmbeddedServer   31 | 57 - org.apache.karaf.elasticsearch.embedded-server - 1.0.0.SNAPSHOT | >> Start ES <<
+    2014-05-27 19:10:37,955 | INFO  | l Console Thread | EmbeddedServer                   | raf.elasticsearch.EmbeddedServer  113 | 57 - org.apache.karaf.elasticsearch.embedded-server - 1.0.0.SNAPSHOT | >> Location of ES Plugins : file:/Users/chmoulli/MyApplications/apache-karaf-2.3.5/plugins
+    2014-05-27 19:10:37,988 | INFO  | l Console Thread | node                             | mmon.logging.slf4j.Slf4jESLogger  100 | 58 - org.apache.servicemix.bundles.elasticsearch - 0.90.5.2 | [KARAF] version[0.90.5], pid[9301], build[NA/NA]
+    2014-05-27 19:10:37,988 | INFO  | l Console Thread | node                             | mmon.logging.slf4j.Slf4jESLogger  100 | 58 - org.apache.servicemix.bundles.elasticsearch - 0.90.5.2 | [KARAF] initializing ...
+    2014-05-27 19:10:37,991 | INFO  | l Console Thread | plugins                          | mmon.logging.slf4j.Slf4jESLogger  100 | 58 - org.apache.servicemix.bundles.elasticsearch - 0.90.5.2 | [KARAF] loaded [], sites []
+    2014-05-27 19:10:38,901 | INFO  | l Console Thread | node                             | mmon.logging.slf4j.Slf4jESLogger  100 | 58 - org.apache.servicemix.bundles.elasticsearch - 0.90.5.2 | [KARAF] initialized
+    2014-05-27 19:10:38,901 | INFO  | l Console Thread | node                             | mmon.logging.slf4j.Slf4jESLogger  100 | 58 - org.apache.servicemix.bundles.elasticsearch - 0.90.5.2 | [KARAF] starting ...
+    2014-05-27 19:10:38,949 | INFO  | l Console Thread | transport                        | mmon.logging.slf4j.Slf4jESLogger  100 | 58 - org.apache.servicemix.bundles.elasticsearch - 0.90.5.2 | [KARAF] bound_address {inet[/127.0.0.1:9300]}, publish_address {inet[/127.0.0.1:9300]}
+    2014-05-27 19:10:41,969 | INFO  | updateTask][T#1] | service                          | mmon.logging.slf4j.Slf4jESLogger  100 | 58 - org.apache.servicemix.bundles.elasticsearch - 0.90.5.2 | [KARAF] new_master [KARAF][xyWB8VIqT5KYgZpAkQhehQ][inet[/127.0.0.1:9300]], reason: zen-disco-join (elected_as_master)
+    2014-05-27 19:10:41,988 | INFO  | l Console Thread | discovery                        | mmon.logging.slf4j.Slf4jESLogger  100 | 58 - org.apache.servicemix.bundles.elasticsearch - 0.90.5.2 | [KARAF] KARAF/xyWB8VIqT5KYgZpAkQhehQ
+    2014-05-27 19:10:41,993 | INFO  | l Console Thread | http                             | mmon.logging.slf4j.Slf4jESLogger  100 | 58 - org.apache.servicemix.bundles.elasticsearch - 0.90.5.2 | [KARAF] bound_address {inet[/127.0.0.1:9200]}, publish_address {inet[/127.0.0.1:9200]}
+
 
 # Add Data
 
 Here is a nice article providing basic JSON queries to create an index and fetch data
 [elasticsearch-in-5-minutes](http://www.elasticsearchtutorial.com/elasticsearch-in-5-minutes.html)
 
-## Info
+## Command to be used to 
+
+### Get Info
 
     curl -XGET 'http://localhost:9200//_search?pretty' -d ''
 
@@ -221,79 +240,5 @@ Remarks :
 ```
 
     java -jar logstash-1.3.2-flatjar.jar agent -f logstash-redis-karaf.conf
-
-## TODO
-
-### Create log4j-json pattern
-
-Follow instructions here
-
-    https://ops4j1.jira.com/browse/PAXLOGGING-114
-
-Modify pom file of `jsonevent-layout`
-
-        <profile>
-          <id>bundle</id>
-          <build>
-            <plugins>
-              <plugin>
-                  <groupId>org.apache.felix</groupId>
-                  <artifactId>maven-bundle-plugin</artifactId>
-                  <version>2.3.7</version>
-                  <extensions>true</extensions>
-                  <configuration>
-                      <instructions>
-                        <Bundle-Name>${project.groupId}.${project.artifactId}</Bundle-Name>
-                        <Bundle-SymbolicName>${project.groupId}.${project.artifactId}</Bundle-SymbolicName>
-                        <Import-Package>!*</Import-Package>
-                        <Fragment-Host>org.ops4j.pax.logging.pax-logging-service;bundle-version="[1.6,1.7)"</Fragment-Host>
-                        <Embed-Dependency>*;scope=compile|runtime;inline=true</Embed-Dependency>
-                        <Implementation-Version>${project.version}</Implementation-Version>
-                      </instructions>
-                  </configuration>
-              </plugin>
-            </plugins>
-          </build>
-        </profile>
-
-Build json format
-
-    mvn clean install -Pbundle
-
-Copy bundle created to system directory
-
-    mkdir -p ${karaf.home}/system/net/logstash/log4j/jsonevent-layout/1.6-SNAPSHOT/
-    cp target/jsonevent-layout-1.6-SNAPSHOT.jar ${karaf.home}/system/net/logstash/log4j/jsonevent-layout/1.6-SNAPSHOT/
-
-Add this line to etc/startup.properties before PAx Logging and start karaf after doing a cleanup
-
-    net/logstash/log4j/jsonevent-layout/1.6-SNAPSHOT/jsonevent-layout-1.6-SNAPSHOT.jar=8
-
-
-    log4j:ERROR Could not instantiate class [net.logstash.log4j.JSONEventLayout].
-    java.lang.ClassNotFoundException: net.logstash.log4j.JSONEventLayout not found by org.ops4j.pax.logging.pax-logging-service [4]
-    	at org.apache.felix.framework.BundleWiringImpl.findClassOrResourceByDelegation(BundleWiringImpl.java:1460)
-    	at org.apache.felix.framework.BundleWiringImpl.access$400(BundleWiringImpl.java:72)
-    	at org.apache.felix.framework.BundleWiringImpl$BundleClassLoader.loadClass(BundleWiringImpl.java:1843)
-    	at java.lang.ClassLoader.loadClass(ClassLoader.java:358)
-    	at java.lang.Class.forName0(Native Method)
-    	at java.lang.Class.forName(Class.java:190)
-    	at org.apache.log4j.helpers.Loader.loadClass(Loader.java:198)
-    	at org.apache.log4j.helpers.OptionConverter.instantiateByClassName(OptionConverter.java:326)
-    	at org.apache.log4j.helpers.OptionConverter.instantiateByKey(OptionConverter.java:123)
-    	at org.apache.log4j.PaxLoggingConfigurator.parseAppender(PaxLoggingConfigurator.java:129)
-    	at org.apache.log4j.PropertyConfigurator.parseCategory(PropertyConfigurator.java:735)
-    	at org.apache.log4j.PropertyConfigurator.configureRootCategory(PropertyConfigurator.java:615)
-    	at org.apache.log4j.PropertyConfigurator.doConfigure(PropertyConfigurator.java:502)
-    	at org.apache.log4j.PaxLoggingConfigurator.doConfigure(PaxLoggingConfigurator.java:72)
-    	at org.ops4j.pax.logging.service.internal.PaxLoggingServiceImpl.updated(PaxLoggingServiceImpl.java:214)
-    	at org.ops4j.pax.logging.service.internal.PaxLoggingServiceImpl$1ManagedPaxLoggingService.updated(PaxLoggingServiceImpl.java:362)
-
-## Test with Logback
-
-https://github.com/logstash/logstash-logback-encoder
-
-    java -cp .,logstash-1.3.2-flatjar.jar,logstash-logback-encoder-1.3.jar -jar logstash-1.3.2-flatjar.jar agent -v -f logstash-karaf.conf
-
 
 
