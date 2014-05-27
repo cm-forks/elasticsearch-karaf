@@ -18,6 +18,11 @@ ElasticSearch project ...
     install -s mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.regexp/1.3_3
     install -s mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.elasticsearch/0.90.5_2
     install -s mvn:org.apache.karaf.elasticsearch/embedded-server/1.0-SNAPSHOT
+    
+# Open your browser and test following urls
+
+    http://localhost:9200/_plugin/kibana3/index.html#/dashboard
+    http://localhost:9200/_plugin/head/index.html
 
 - When the bundles have been deployed, a ElasticSearch server will be started
 - You can verify/validate this by looking to your karaf log (log:display)
